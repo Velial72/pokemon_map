@@ -9,5 +9,6 @@ class Pokemon(models.Model):
         return self.text
 
 class PokemonEntity(models.Model):
-    lat = models.FloatField(null=True)
-    lon = models.FloatField(null=True)
+    pokemon = models.ForeignKey(Pokemon, verbose_name='Покемон', related_name='entities', on_delete=models.CASCADE)
+    lat = models.FloatField(verbose_name='Широта')
+    lon = models.FloatField(verbose_name='Долгота')
