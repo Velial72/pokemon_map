@@ -3,6 +3,7 @@ import json
 
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
+from pokemon_entities.models import Pokemon, PokemonEntity
 
 
 MOSCOW_CENTER = [55.751244, 37.618423]
@@ -11,7 +12,6 @@ DEFAULT_IMAGE_URL = (
     '/latest/fixed-aspect-ratio-down/width/240/height/240?cb=20130525215832'
     '&fill=transparent'
 )
-
 
 def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
     icon = folium.features.CustomIcon(
@@ -25,26 +25,31 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
         icon=icon,
     ).add_to(folium_map)
 
+def get_image_url(request, pokemon):
+    img_url = DEFAULT_IMAGE_URL
+    if pokemon.photo:
+        img_url = request.build_absolute_uri(pokemon.photo.url)
+        print(img_url)
+    return img_url
 
 def show_all_pokemons(request):
-    with open('pokemon_entities/pokemons.json', encoding='utf-8') as database:
-        pokemons = json.load(database)['pokemons']
+    pokemon_entities = PokemonEntity.objects.select_related('pokemon')
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    for pokemon in pokemons:
-        for pokemon_entity in pokemon['entities']:
-            add_pokemon(
-                folium_map, pokemon_entity['lat'],
-                pokemon_entity['lon'],
-                pokemon['img_url']
-            )
-
+    for pokemon_entity in pokemon_entities:
+        add_pokemon(
+            folium_map,
+            pokemon_entity.lat,
+            pokemon_entity.lon,
+            get_image_url(request, pokemon_entity.pokemon)
+        )
+    pokemons = Pokemon.objects.all()
     pokemons_on_page = []
     for pokemon in pokemons:
         pokemons_on_page.append({
-            'pokemon_id': pokemon['pokemon_id'],
-            'img_url': pokemon['img_url'],
-            'title_ru': pokemon['title_ru'],
+            'pokemon_id': pokemon.id,
+            'img_url': get_image_url(request, pokemon),
+            'title_ru': pokemon.text,
         })
 
     return render(request, 'mainpage.html', context={
