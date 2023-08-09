@@ -2,11 +2,14 @@ from django.db import models  # noqa F401
 
 # your models here
 class Pokemon(models.Model):
-    text = models.TextField()
+    title = models.TextField(verbose_name='Название')
+    title_en = models.TextField(verbose_name='Название на английском')
+    title_jp = models.TextField(verbose_name='Название на японском')
+    description = models.TextField(verbose_name='Описание')
     photo = models.ImageField(upload_to='pokemons', null=True)
 
     def __str__(self):
-        return self.text
+        return self.title
 
 class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(Pokemon, verbose_name='Покемон', related_name='entities', on_delete=models.CASCADE)

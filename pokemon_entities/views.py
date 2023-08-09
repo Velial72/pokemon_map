@@ -52,7 +52,7 @@ def show_all_pokemons(request):
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
             'img_url': get_image_url(request, pokemon),
-            'title_ru': pokemon.text,
+            'title_ru': pokemon.title,
         })
 
     return render(request, 'mainpage.html', context={
@@ -81,7 +81,10 @@ def show_pokemon(request, pokemon_id):
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
             'img_url': get_image_url(request, pokemon),
-            'title_ru': pokemon.text,
+            'title_ru': pokemon.title,
+            'title_en': pokemon.title_en,
+            'title_jp': pokemon.title_jp,
+            'description': pokemon.description
         })
 
     return render(request, 'pokemon.html', context={
@@ -89,7 +92,9 @@ def show_pokemon(request, pokemon_id):
         'pokemon': {
             'pokemon_id': pokemon.id,
             'img_url': requested_pokemon.photo.url,
-            'title_ru': pokemon.text,
-
+            'title_ru': pokemon.title,
+            'title_en': pokemon.title_en,
+            'title_jp': pokemon.title_jp,
+            'description': pokemon.description
         }
     })
