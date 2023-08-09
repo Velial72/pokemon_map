@@ -28,3 +28,6 @@ class PokemonEntity(models.Model):
     attack = models.IntegerField(verbose_name='Атака', blank=True)
     defence = models.IntegerField(verbose_name='Защита', blank=True)
     stamina = models.IntegerField(verbose_name='Выносливость', blank=True)
+
+    def __str__(self):
+        return f"{self.pokemon} Широта: {self.lat} Долгота: {self.lon}"
