@@ -1,6 +1,6 @@
 from django.db import models  # noqa F401
 
-# your models here
+
 class Pokemon(models.Model):
     title = models.TextField(verbose_name='Название')
     title_en = models.TextField(verbose_name='Название на английском', blank=True)
