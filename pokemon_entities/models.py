@@ -12,7 +12,7 @@ class Pokemon(models.Model):
                                        blank=True,
                                        related_name="previous_evolutions",
                                        on_delete=models.SET_NULL)
-    photo = models.ImageField(upload_to='pokemons', null=True)
+    photo = models.ImageField(verbose_name='Картинка', upload_to='pokemons', null=True)
 
     def __str__(self):
         return self.title
